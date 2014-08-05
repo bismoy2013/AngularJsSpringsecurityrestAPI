@@ -1,0 +1,75 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'jetty'
+
+
+group = 'net.dontdrinkandroot.example'
+version = '0.2.1-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+
+configurations { providedCompile }
+
+dependencies {
+    providedCompile "javax.servlet:javax.servlet-api:3.+"
+}
+
+sourceSets.main.compileClasspath += configurations.providedCompile
+sourceSets.test.compileClasspath += configurations.providedCompile
+sourceSets.test.runtimeClasspath += configurations.providedCompile
+
+repositories {
+        
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.springframework', name: 'spring-orm', version:'3.2.8.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version:'3.2.8.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version:'3.2.8.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version:'3.2.8.RELEASE'
+    compile(group: 'com.sun.jersey.contribs', name: 'jersey-spring', version:'1.18.1') 
+		{
+		exclude(module: 'spring')
+		exclude(module: 'spring-core')
+		exclude(module: 'spring-web')
+		exclude(module: 'spring-beans')
+		exclude(module: 'spring-context')
+		exclude(module: 'spring-aop')
+		}
+    compile group: 'com.sun.jersey', name: 'jersey-json', version:'1.18.1'
+    compile group: 'org.hsqldb', name: 'hsqldb', version:'2.3.2'
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version:'1.4'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version:'4.3.5.Final'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version:'3.2.3.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version:'3.2.3.RELEASE'
+    testCompile group: 'org.springframework', name: 'spring-test', version:'3.2.8.RELEASE'
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+    providedCompile group: 'javax.servlet', name: 'servlet-api', version:'2.5'
+}
+
+
+
+jettyRun {
+    httpPort = 8080
+}
+jettyRunWar {
+    httpPort = 8080
+}
+
+task buildDeploy {
+    
+}
+
+jettyRun.contextPath = ''
+
+buildDeploy.dependsOn clean
+buildDeploy.dependsOn build
+buildDeploy.dependsOn jettyRun
